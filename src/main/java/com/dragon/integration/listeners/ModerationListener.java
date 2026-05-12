@@ -20,7 +20,9 @@ import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @RequiredArgsConstructor
@@ -32,6 +34,12 @@ public class ModerationListener extends ListenerAdapter implements DiscordEventL
             1489006120432566485L,
             1489005140093436067L
     );
+
+    private static final int MAX_CONTENT_LENGTH      = 1500;
+    private static final int RATE_LIMIT_WINDOW_SECONDS = 10;
+    private static final int RATE_LIMIT_MAX_CALLS    = 3;
+
+    private final ConcurrentHashMap<String, long[]> rateLimitWindows = new ConcurrentHashMap<>();
 
     private static final String RULES = """
             1. General Behavior: Treat all teammates, staff, and opponents with respect. No harassment, hate speech, discrimination, or toxicity of any kind. Constructive criticism is welcome, pure toxicity is not. Casual banter is fine but keep it out of in-game chat. Represent the team professionally at all times.
@@ -69,7 +77,8 @@ public class ModerationListener extends ListenerAdapter implements DiscordEventL
             """;
 
     private final VultrInferenceClient vultrInferenceClient;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     private final SanctionService sanctionService;
 
@@ -77,19 +86,41 @@ public class ModerationListener extends ListenerAdapter implements DiscordEventL
     public void onMessageReceived(MessageReceivedEvent event) {
         if (event.getAuthor().isBot() || event.isWebhookMessage()) return;
 
-        if (exclusionsList.contains(event.getChannel().getIdLong())) return; // Filters out the channel without ai-assisted moderation.
+        if (exclusionsList.contains(event.getChannel().getIdLong())) return;
 
         if (!event.isFromGuild()) return;
 
         String content = event.getMessage().getContentStripped().trim();
         if (content.isEmpty()) return;
 
-        objectMapper.configure(
-                com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-                false
-        );
+        if (isRateLimited(event.getAuthor().getId())) {
+            log.debug("[Moderation] Rate-limited user {} — skipping AI call", event.getAuthor().getId());
+            return;
+        }
 
-        Thread.ofVirtual().start(() -> moderate(event.getMessage(), content));
+        String capped = content.length() > MAX_CONTENT_LENGTH
+                ? content.substring(0, MAX_CONTENT_LENGTH)
+                : content;
+
+        Thread.ofVirtual().start(() -> moderate(event.getMessage(), capped));
+    }
+
+    private boolean isRateLimited(String userId) {
+        long now = Instant.now().getEpochSecond();
+        long windowStart = now - RATE_LIMIT_WINDOW_SECONDS;
+
+        long[] timestamps = rateLimitWindows.compute(userId, (k, existing) -> {
+            if (existing == null) return new long[]{now};
+            long[] recent = java.util.Arrays.stream(existing)
+                    .filter(t -> t >= windowStart)
+                    .toArray();
+            long[] updated = new long[recent.length + 1];
+            System.arraycopy(recent, 0, updated, 0, recent.length);
+            updated[recent.length] = now;
+            return updated;
+        });
+
+        return timestamps.length > RATE_LIMIT_MAX_CALLS;
     }
 
     private void moderate(Message message, String content) {

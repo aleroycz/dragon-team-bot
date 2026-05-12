@@ -2,6 +2,8 @@ package com.dragon.service.moderation;
 
 import com.dragon.dto.interview.AgeVerificationResult;
 import com.dragon.service.VultrInferenceClient;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 public class AgeVerificationService {
 
     private final VultrInferenceClient inferenceClient;
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     private static final String SYSTEM_PROMPT = """
             You are an age verification assistant for Dragon Team, a competitive Valorant organisation.
@@ -61,31 +65,37 @@ public class AgeVerificationService {
     public AgeVerificationResult analyse(String historyText) throws Exception {
         String userMessage = "Here is the interview conversation so far:\n\n" + historyText;
         String response = inferenceClient.complete(SYSTEM_PROMPT, userMessage, 0L);
-        return parseResult(response);
+        return parseResult(sanitizeResponse(response));
     }
 
     // -------------------------------------------------------------------------
     // Parsing
     // -------------------------------------------------------------------------
 
-    private AgeVerificationResult parseResult(String json) {
-        boolean confident       = parseBoolean(json, "confident");
-        boolean likelyAdult     = parseBoolean(json, "likelyAdult");
-        AgeVerificationResult.ConfidenceLevel confidence = parseConfidence(json);
-        String reason           = extractField(json, "reason");
-        String followUp         = extractField(json, "followUpQuestion");
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private record RawVerification(
+            boolean confident,
+            boolean likelyAdult,
+            String confidence,
+            String reason,
+            String followUpQuestion
+    ) {}
 
-        return new AgeVerificationResult(
-                confident,
-                likelyAdult,
-                confidence,
-                reason,
-                "null".equals(followUp) ? null : followUp
-        );
+    private AgeVerificationResult parseResult(String json) {
+        try {
+            RawVerification raw = objectMapper.readValue(json, RawVerification.class);
+            AgeVerificationResult.ConfidenceLevel level = parseConfidence(raw.confidence());
+            String followUp = raw.followUpQuestion() == null || raw.followUpQuestion().equals("null")
+                    ? null : raw.followUpQuestion();
+            return new AgeVerificationResult(raw.confident(), raw.likelyAdult(), level, raw.reason(), followUp);
+        } catch (Exception e) {
+            log.error("[AgeVerification] Failed to parse verification JSON: {}", json, e);
+            return new AgeVerificationResult(false, false, AgeVerificationResult.ConfidenceLevel.LOW, "Parse error", null);
+        }
     }
 
-    private AgeVerificationResult.ConfidenceLevel parseConfidence(String json) {
-        String raw = extractField(json, "confidence");
+    private AgeVerificationResult.ConfidenceLevel parseConfidence(String raw) {
+        if (raw == null) return AgeVerificationResult.ConfidenceLevel.LOW;
         try {
             return AgeVerificationResult.ConfidenceLevel.valueOf(raw.toUpperCase());
         } catch (IllegalArgumentException e) {
@@ -94,23 +104,16 @@ public class AgeVerificationService {
         }
     }
 
-    private String extractField(String json, String field) {
-        String key = "\"" + field + "\":";
-        int index = json.indexOf(key);
-        if (index == -1) return "null";
-        int valueStart = index + key.length();
-        while (valueStart < json.length() && json.charAt(valueStart) == ' ') valueStart++;
-        if (json.charAt(valueStart) == '"') {
-            int start = valueStart + 1;
-            int end = json.indexOf("\"", start);
-            return end == -1 ? "null" : json.substring(start, end);
+    private String sanitizeResponse(String raw) {
+        if (raw == null) return "{}";
+        raw = raw.replaceAll("(?s)<think>.*?</think>", "").trim();
+        raw = raw.replace("```json", "").replace("```", "");
+        int start = raw.indexOf("{");
+        int end = raw.lastIndexOf("}");
+        if (start == -1 || end == -1) {
+            log.warn("[AgeVerification] No JSON found in model response: {}", raw);
+            return "{}";
         }
-        int end = json.indexOf(",", valueStart);
-        if (end == -1) end = json.indexOf("}", valueStart);
-        return end == -1 ? "null" : json.substring(valueStart, end).trim();
-    }
-
-    private boolean parseBoolean(String json, String field) {
-        return "true".equals(extractField(json, field));
+        return raw.substring(start, end + 1);
     }
 }

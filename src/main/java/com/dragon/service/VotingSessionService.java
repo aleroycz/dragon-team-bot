@@ -195,8 +195,21 @@ public class VotingSessionService {
         for (Event event : winners) {
             event.setStatus(EventStatus.SCHEDULED);
 
-            this.jda.getGuildById(event.getGuildId()).createScheduledEvent(
-                    event.getEventName(), Objects.requireNonNull(this.jda.getGuildChannelById(premierVoiceChannelId)),
+            var guild = this.jda.getGuildById(event.getGuildId());
+            if (guild == null) {
+                log.error("[VotingSession] Guild {} not found — cannot create scheduled event for '{}'",
+                        event.getGuildId(), event.getEventName());
+                continue;
+            }
+            var voiceChannel = this.jda.getGuildChannelById(premierVoiceChannelId);
+            if (voiceChannel == null) {
+                log.error("[VotingSession] Premier voice channel {} not found — cannot create scheduled event for '{}'",
+                        premierVoiceChannelId, event.getEventName());
+                continue;
+            }
+
+            guild.createScheduledEvent(
+                    event.getEventName(), voiceChannel,
                     event.getStartTime()
                             .toLocalDate()
                             .atTime(18, 0)

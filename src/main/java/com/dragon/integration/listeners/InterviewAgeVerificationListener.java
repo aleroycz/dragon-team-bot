@@ -32,7 +32,9 @@ public class InterviewAgeVerificationListener extends ListenerAdapter implements
     private static final String ICON_AV_CHECK   = "https://cdn.discordapp.com/attachments/1501768878051692624/1501777489150742680/1778122061238.png?ex=69fd4ec7&is=69fbfd47&hm=a3c5412b9ca6dd874ed4fd7ca2d8c3ffdb8bbde4b6de87ff40df192eebd263fa&";   // green check
     private static final int COLOR_AV = 0x5A78C8; // slate-blue — neutral/informational
 
-    private static final int MAX_FOLLOW_UPS        = 2;
+    private static final int MAX_FOLLOW_UPS         = 2;
+    private static final int MAX_HISTORY_MESSAGES   = 30;
+    private static final int MAX_MESSAGE_LENGTH     = 500;
 
     private final AgeVerificationService verificationService;
 
@@ -80,7 +82,16 @@ public class InterviewAgeVerificationListener extends ListenerAdapter implements
         if (content.isEmpty()) return;
         if (!event.getAuthor().getId().equals(state.memberId())) return;
 
-        state.appendMessage(state.memberName(), content);
+        if (state.messageHistory().size() >= MAX_HISTORY_MESSAGES) {
+            log.warn("[AgeVerification] Message history limit reached for channel {} — ignoring further input", channelId);
+            return;
+        }
+
+        String capped = content.length() > MAX_MESSAGE_LENGTH
+                ? content.substring(0, MAX_MESSAGE_LENGTH)
+                : content;
+
+        state.appendMessage(state.memberName(), capped);
 
         if (state.messageHistory().isEmpty()) return;
 

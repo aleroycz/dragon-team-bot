@@ -1,6 +1,7 @@
 package com.dragon.integration.listeners;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
@@ -30,6 +31,7 @@ import static com.dragon.commands.CommandAbout.LOGO_URL;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class UserManagementListener extends ListenerAdapter implements DiscordEventListener {
 
     // ── Interview icon URLs ───────────────────────────────────────────────────────
@@ -97,7 +99,7 @@ public class UserManagementListener extends ListenerAdapter implements DiscordEv
     }
 
     private void handleFail(JDA jda, Member member, Throwable error) {
-        error.printStackTrace();
+        log.error("[UserManagement] Failed to process member join for {}: {}", member.getUser().getAsTag(), error.getMessage(), error);
     }
 
     // -------------------------------------------------------------------------
@@ -107,7 +109,7 @@ public class UserManagementListener extends ListenerAdapter implements DiscordEv
     private void sendWelcomeMessage(JDA jda, Member member) {
         TextChannel welcomeChannel = jda.getTextChannelById(welcomeChannelId);
         if (welcomeChannel == null) {
-            System.err.println("[UserManagement] Welcome channel not found: " + welcomeChannelId);
+            log.error("[UserManagement] Welcome channel not found: {}", welcomeChannelId);
             return;
         }
 
@@ -166,7 +168,7 @@ public class UserManagementListener extends ListenerAdapter implements DiscordEv
     private void openInterviewTicket(JDA jda, Member member, Guild guild) {
         Category interviewCategory = guild.getCategoryById(openInterviewId);
         if (interviewCategory == null) {
-            System.err.println("[UserManagement] Interview category not found: " + openInterviewId);
+            log.error("[UserManagement] Interview category not found: {}", openInterviewId);
             return;
         }
 
@@ -178,7 +180,8 @@ public class UserManagementListener extends ListenerAdapter implements DiscordEv
                 .addRolePermissionOverride(guild.getPublicRole().getIdLong(), 0, INTERVIEW_PERMISSIONS)
                 .queue(
                         channel -> sendInterviewEmbed(embed, channel, member),
-                        Throwable::printStackTrace
+                        err -> log.error("[UserManagement] Failed to create interview channel for {}: {}",
+                                member.getUser().getAsTag(), err.getMessage(), err)
                 );
     }
 

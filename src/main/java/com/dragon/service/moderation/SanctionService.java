@@ -620,10 +620,20 @@ public class SanctionService {
                 .queue();
     }
 
+    private static final int MAX_REASON_LENGTH = 1000;
+
     private SanctionEntity persist(SanctionRequest request) {
         Instant expiresAt = request.durationSeconds() != null
                 ? Instant.now().plus(request.durationSeconds(), ChronoUnit.SECONDS)
                 : null;
+
+        String reason = request.reason();
+        if (reason == null || reason.isBlank()) {
+            throw new IllegalArgumentException("Sanction reason cannot be empty.");
+        }
+        if (reason.length() > MAX_REASON_LENGTH) {
+            reason = reason.substring(0, MAX_REASON_LENGTH - 3) + "...";
+        }
 
         return sanctionRepository.save(SanctionEntity.builder()
                 .guildId(request.guildId())
@@ -632,7 +642,7 @@ public class SanctionService {
                 .moderatorUserId(request.moderatorUserId())
                 .moderatorUserTag(request.moderatorUserTag())
                 .type(request.type())
-                .reason(request.reason())
+                .reason(reason)
                 .durationSeconds(request.durationSeconds())
                 .expiresAt(expiresAt)
                 .status(SanctionStatus.ACTIVE)

@@ -50,11 +50,13 @@ public class VultrInferenceClient {
     private final ConversationIntelligenceService intelligence;
     private final VectorMemoryStore memoryStore;
     private final EmotionEngine     emotionEngine;
-    private final HttpClient httpClient = HttpClient.newHttpClient();
+    private final HttpClient httpClient = HttpClient.newBuilder()
+            .connectTimeout(java.time.Duration.ofSeconds(10))
+            .build();
     private final Gson       gson       = new GsonBuilder().setPrettyPrinting().create();
 
     public String complete(String systemPrompt, String userMessage, long userId) throws Exception {
-        if (vultrApiKey == null) {
+        if (vultrApiKey == null || vultrApiKey.isBlank()) {
             throw new IllegalArgumentException("AI Module is not initialized.");
         }
 
@@ -112,6 +114,7 @@ public class VultrInferenceClient {
                 .uri(URI.create("https://api.vultrinference.com/v1/chat/completions"))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + vultrApiKey)
+                .timeout(java.time.Duration.ofSeconds(30))
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
                 .build();
 
