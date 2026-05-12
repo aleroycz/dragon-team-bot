@@ -2,7 +2,9 @@ package com.dragon.integration.listeners;
 
 import com.dragon.entity.event.Event;
 import com.dragon.integration.DiscordEventListener;
+import com.dragon.module.ModuleName;
 import com.dragon.service.EventService;
+import com.dragon.service.ModuleService;
 import com.dragon.service.audio.VoiceAnalysisService;
 import com.dragon.service.audio.VoiceReceiveHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Component;
 public class VoiceChannelListener extends ListenerAdapter implements DiscordEventListener {
 
     private final EventService eventService;
+    private final ModuleService moduleService;
 
     @Value("${discord.premier.voice.channel.id}")
     private String premierVoiceChannelId;
@@ -35,6 +38,10 @@ public class VoiceChannelListener extends ListenerAdapter implements DiscordEven
     @Override
     public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event) {
         Member member = event.getMember();
+
+        String guildId = event.getGuild().getId();
+        if (!moduleService.isEnabled(ModuleName.VOICE_EVALUATION, guildId)
+                || moduleService.isInMaintenance(ModuleName.VOICE_EVALUATION)) return;
 
         Event currentEvent = this.eventService.getCurrentActiveEvent();
         if (currentEvent == null)

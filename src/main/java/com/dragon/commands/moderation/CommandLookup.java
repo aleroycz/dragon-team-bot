@@ -3,6 +3,8 @@ package com.dragon.commands.moderation;
 import com.dragon.dto.moderation.SanctionResponse;
 import com.dragon.dto.moderation.SanctionType;
 import com.dragon.integration.SlashCommand;
+import com.dragon.module.ModuleName;
+import com.dragon.service.ModuleService;
 import com.dragon.service.UserConsentService;
 import com.dragon.service.audio.VoiceScoreService;
 import com.dragon.service.moderation.ModeratorNoteService;
@@ -31,6 +33,7 @@ public class CommandLookup implements SlashCommand {
     private final VoiceScoreService voiceScoreService;
     private final UserConsentService userConsentService;
     private final ModeratorNoteService noteService;
+    private final ModuleService moduleService;
     private final Embed embed;
 
     @Override
@@ -47,6 +50,8 @@ public class CommandLookup implements SlashCommand {
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
+        if (!moduleService.checkAndReply(ModuleName.MODERATION, event)) return;
+
         if (!Objects.requireNonNull(event.getMember()).hasPermission(Permission.MODERATE_MEMBERS)) {
             event.replyEmbeds(embed.error(IconRegistry.ICON_ALERT, "Permission Denied",
                     "You do not have permission to use this command.").build()

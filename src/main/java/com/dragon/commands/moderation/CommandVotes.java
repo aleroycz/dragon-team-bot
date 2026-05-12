@@ -7,10 +7,12 @@ import com.dragon.entity.event.Event;
 import com.dragon.entity.event.vote.VotingSession;
 import com.dragon.entity.event.vote.VotingSessionVote;
 import com.dragon.integration.SlashCommand;
+import com.dragon.module.ModuleName;
 import com.dragon.repository.event.VotingSessionRepository;
 import com.dragon.repository.event.VotingSessionVoteRepository;
 import com.dragon.dto.vote.VotingSessionStatus;
 import com.dragon.repository.event.EventRepository;
+import com.dragon.service.ModuleService;
 import com.dragon.service.VotingSessionService;
 import com.dragon.utils.Embed;
 import com.dragon.utils.IconRegistry;
@@ -39,6 +41,7 @@ public class CommandVotes implements SlashCommand {
     private final VotingSessionRepository     votingSessionRepository;
     private final VotingSessionVoteRepository votingSessionVoteRepository;
     private final EventRepository             eventRepository;
+    private final ModuleService               moduleService;
     private final Embed                       embed;
 
     @Override
@@ -62,6 +65,8 @@ public class CommandVotes implements SlashCommand {
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
+        if (!moduleService.checkAndReply(ModuleName.VOTING, event)) return;
+
         if (!Objects.requireNonNull(event.getMember()).hasPermission(Permission.ADMINISTRATOR)) {
             event.replyEmbeds(embed.error(IconRegistry.ICON_ALERT, "Permission Denied",
                     "You do not have permission to manage votes.").build()

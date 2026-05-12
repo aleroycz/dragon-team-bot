@@ -2,6 +2,8 @@ package com.dragon.integration.listeners;
 
 import com.dragon.dto.AssistantResponse;
 import com.dragon.integration.DiscordEventListener;
+import com.dragon.module.ModuleName;
+import com.dragon.service.ModuleService;
 import com.dragon.service.VultrInferenceClient;
 import com.dragon.utils.Embed;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +30,7 @@ public class AssistantListener extends ListenerAdapter implements DiscordEventLi
     private static final long TARGET_CHANNEL_ID = 1501318673959485658L;
     private static final long RULES_CHANNEL_ID = 1489005045671264397L;
 
+    private final ModuleService moduleService;
     private final ObjectMapper objectMapper;
     private final Embed embed;
 
@@ -99,6 +102,12 @@ public class AssistantListener extends ListenerAdapter implements DiscordEventLi
 
         String content = event.getMessage().getContentStripped().trim();
         if (content.isEmpty()) return;
+
+        if (!moduleService.isEnabled(ModuleName.MODERATION, event.getGuild().getId())
+                || moduleService.isInMaintenance(ModuleName.MODERATION)) {
+            log.info("[AI/Assistant] Is currently disabled or in maintenance.");
+            return;
+        }
 
         Thread.ofVirtual().start(() -> handle(event.getMessage(), content));
     }

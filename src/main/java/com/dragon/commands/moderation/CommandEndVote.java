@@ -1,6 +1,8 @@
 package com.dragon.commands.moderation;
 
 import com.dragon.integration.SlashCommand;
+import com.dragon.module.ModuleName;
+import com.dragon.service.ModuleService;
 import com.dragon.service.VotingSessionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ import java.util.Objects;
 public class CommandEndVote implements SlashCommand {
 
     private final VotingSessionService votingSessionService;
+    private final ModuleService moduleService;
 
     @Override
     public String getName() {
@@ -29,6 +32,8 @@ public class CommandEndVote implements SlashCommand {
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
+        if (!moduleService.checkAndReply(ModuleName.VOTING, event)) return;
+
         if (Objects.requireNonNull(event.getMember()).hasPermission(Permission.ADMINISTRATOR)) {
             this.votingSessionService.forceCloseCurrentSession();
 

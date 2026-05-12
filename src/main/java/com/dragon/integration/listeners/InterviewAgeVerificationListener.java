@@ -4,6 +4,8 @@ import com.dragon.dto.interview.AgeVerificationQuestion;
 import com.dragon.dto.interview.AgeVerificationResult;
 import com.dragon.dto.interview.InterviewState;
 import com.dragon.integration.DiscordEventListener;
+import com.dragon.module.ModuleName;
+import com.dragon.service.ModuleService;
 import com.dragon.service.moderation.AgeVerificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +39,7 @@ public class InterviewAgeVerificationListener extends ListenerAdapter implements
     private static final int MAX_MESSAGE_LENGTH     = 500;
 
     private final AgeVerificationService verificationService;
+    private final ModuleService moduleService;
 
     private final Map<String, InterviewState> activeInterviews = new ConcurrentHashMap<>();
 
@@ -72,6 +75,12 @@ public class InterviewAgeVerificationListener extends ListenerAdapter implements
         if (state == null) return;
 
         if (event.getAuthor().isBot()) return;
+
+        if (event.isFromGuild()) {
+            String guildId = event.getGuild().getId();
+            if (!moduleService.isEnabled(ModuleName.AGE_VERIFICATION, guildId)
+                    || moduleService.isInMaintenance(ModuleName.AGE_VERIFICATION)) return;
+        }
 
         InterviewState.VerificationStage stage = state.mutableState().stage();
         if (stage == InterviewState.VerificationStage.VERIFICATION_SENT

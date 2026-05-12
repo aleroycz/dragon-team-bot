@@ -3,6 +3,8 @@ package com.dragon.commands.moderation;
 import com.dragon.dto.moderation.SanctionRequest;
 import com.dragon.dto.moderation.SanctionType;
 import com.dragon.integration.SlashCommand;
+import com.dragon.module.ModuleName;
+import com.dragon.service.ModuleService;
 import com.dragon.service.moderation.SanctionService;
 import com.dragon.utils.Embed;
 import com.dragon.utils.IconRegistry;
@@ -23,6 +25,7 @@ import java.util.Objects;
 public class CommandWarn implements SlashCommand {
 
     private final SanctionService sanctionService;
+    private final ModuleService moduleService;
     private final Embed embed;
 
     @Override
@@ -44,6 +47,8 @@ public class CommandWarn implements SlashCommand {
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
+        if (!moduleService.checkAndReply(ModuleName.MODERATION, event)) return;
+
         if (!Objects.requireNonNull(event.getMember()).hasPermission(Permission.MODERATE_MEMBERS)) {
             event.replyEmbeds(
                     embed.error(

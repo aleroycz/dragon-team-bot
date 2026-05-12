@@ -55,6 +55,7 @@ public class VultrInferenceClient {
             .build();
     private final Gson       gson       = new GsonBuilder().setPrettyPrinting().create();
 
+
     public String complete(String systemPrompt, String userMessage, long userId) throws Exception {
         if (vultrApiKey == null || vultrApiKey.isBlank()) {
             throw new IllegalArgumentException("AI Module is not initialized.");

@@ -5,6 +5,8 @@ import com.dragon.dto.moderation.ModerationResult;
 import com.dragon.dto.moderation.SanctionRequest;
 import com.dragon.dto.moderation.SanctionType;
 import com.dragon.integration.DiscordEventListener;
+import com.dragon.module.ModuleName;
+import com.dragon.service.ModuleService;
 import com.dragon.service.VultrInferenceClient;
 import com.dragon.service.moderation.SanctionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,6 +83,7 @@ public class ModerationListener extends ListenerAdapter implements DiscordEventL
             .configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     private final SanctionService sanctionService;
+    private final ModuleService moduleService;
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -89,6 +92,10 @@ public class ModerationListener extends ListenerAdapter implements DiscordEventL
         if (exclusionsList.contains(event.getChannel().getIdLong())) return;
 
         if (!event.isFromGuild()) return;
+
+        String guildId = event.getGuild().getId();
+        if (!moduleService.isEnabled(ModuleName.MODERATION, guildId)
+                || moduleService.isInMaintenance(ModuleName.MODERATION)) return;
 
         String content = event.getMessage().getContentStripped().trim();
         if (content.isEmpty()) return;

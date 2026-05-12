@@ -2,6 +2,8 @@ package com.dragon.commands.moderation;
 
 import com.dragon.entity.MemberSanctionSummaryEntity;
 import com.dragon.integration.SlashCommand;
+import com.dragon.module.ModuleName;
+import com.dragon.service.ModuleService;
 import com.dragon.service.moderation.ModerationStatsService;
 import com.dragon.service.moderation.ModerationStatsService.ServerModerationStats;
 import com.dragon.utils.Embed;
@@ -23,6 +25,7 @@ public class CommandModStats implements SlashCommand {
     private static final int LOOKBACK_DAYS = 30;
 
     private final ModerationStatsService statsService;
+    private final ModuleService moduleService;
     private final Embed embed;
 
     @Override
@@ -38,6 +41,8 @@ public class CommandModStats implements SlashCommand {
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
+        if (!moduleService.checkAndReply(ModuleName.MODERATION, event)) return;
+
         if (!Objects.requireNonNull(event.getMember()).hasPermission(Permission.MANAGE_SERVER)) {
             event.replyEmbeds(embed.error(IconRegistry.ICON_ALERT, "Permission Denied",
                     "You need the **Manage Server** permission to view moderation statistics.").build()

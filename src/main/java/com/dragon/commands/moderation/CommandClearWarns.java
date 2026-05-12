@@ -1,6 +1,8 @@
 package com.dragon.commands.moderation;
 
 import com.dragon.integration.SlashCommand;
+import com.dragon.module.ModuleName;
+import com.dragon.service.ModuleService;
 import com.dragon.service.moderation.SanctionService;
 import com.dragon.utils.Embed;
 import com.dragon.utils.IconRegistry;
@@ -21,6 +23,7 @@ import java.util.Objects;
 public class CommandClearWarns implements SlashCommand {
 
     private final SanctionService sanctionService;
+    private final ModuleService moduleService;
     private final Embed embed;
 
     @Override
@@ -38,6 +41,8 @@ public class CommandClearWarns implements SlashCommand {
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
+        if (!moduleService.checkAndReply(ModuleName.MODERATION, event)) return;
+
         if (!Objects.requireNonNull(event.getMember()).hasPermission(Permission.MODERATE_MEMBERS)) {
             event.replyEmbeds(embed.error(IconRegistry.ICON_ALERT, "Permission Denied",
                     "You do not have permission to clear warnings.").build()
@@ -53,8 +58,8 @@ public class CommandClearWarns implements SlashCommand {
             return;
         }
 
-        String reason      = Objects.requireNonNull(event.getOption("reason")).getAsString();
-        String guildId     = Objects.requireNonNull(event.getGuild()).getId();
+        String reason       = Objects.requireNonNull(event.getOption("reason")).getAsString();
+        String guildId      = Objects.requireNonNull(event.getGuild()).getId();
         String clearedByTag = event.getMember().getUser().getAsTag() + " — " + reason;
 
         int cleared = sanctionService.clearWarns(target.getId(), guildId, clearedByTag);
@@ -62,7 +67,7 @@ public class CommandClearWarns implements SlashCommand {
         if (cleared == 0) {
             event.replyEmbeds(
                     embed.info(IconRegistry.ICON_CHECKS, "No Active Warnings",
-                            "**" + target.getUser().getAsTag() + "** has no active warnings to clear.")
+                                    "**" + target.getUser().getAsTag() + "** has no active warnings to clear.")
                             .setThumbnail(target.getEffectiveAvatarUrl())
                             .build()
             ).setEphemeral(true).queue();
