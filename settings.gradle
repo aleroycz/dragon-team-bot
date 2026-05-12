@@ -1,0 +1,15 @@
+rootProject.name = 'rest-service'
+
+gradle.settingsEvaluated {
+    startParameter.setConfigureOnDemand(true)
+}
+
+gradle.settingsEvaluated {
+    startParameter.parallelProjectExecutionEnabled = true
+}
+
+buildCache {
+    local {
+        enabled = true
+    }
+}

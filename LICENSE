@@ -1,0 +1,275 @@
+Cipron Proprietary License (CPL) v1.1
+
+Copyright (c) 2026 Cipron s.r.o.
+All Rights Reserved.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PROPRIETARY AND CONFIDENTIAL SOFTWARE LICENSE AGREEMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+IMPORTANT — READ CAREFULLY BEFORE USING THIS SOFTWARE
+
+This Proprietary Software License Agreement ("Agreement") is a legally binding
+contract between you ("Licensee") and Cipron s.r.o., a company incorporated
+under the laws of the Slovak Republic, with its registered office at Slovakia
+("Licensor" or "Cipron").
+
+By accessing, downloading, installing, copying, or otherwise using this Software,
+you acknowledge that you have read, understood, and agree to be bound by the
+terms and conditions of this Agreement. If you do not agree to these terms, you
+must immediately cease all use of the Software and destroy all copies in your
+possession.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 1 — DEFINITIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1.1 "Software" refers to all source code, object code, compiled binaries,
+    libraries, modules, scripts, configuration files, documentation, assets,
+    and any associated materials provided under this Agreement, including
+    any updates, patches, or new versions thereof.
+
+1.2 "Authorized User" means any employee, contractor, or subsidiary of Cipron
+    s.r.o. who has been explicitly granted access to the Software in writing
+    by an authorized representative of Cipron s.r.o.
+
+1.3 "Confidential Information" means any non-public technical, business, or
+    operational information contained within or derived from the Software,
+    including but not limited to algorithms, data structures, architectures,
+    trade secrets, and internal processes.
+
+1.4 "Derivative Work" means any work that is based upon, incorporates, or is
+    derived from the Software, including modifications, translations,
+    adaptations, or any other form in which the Software may be recast,
+    transformed, or adapted.
+
+1.5 "Authorized Subsidiary" means any legal entity in which Cipron s.r.o.
+    holds a majority ownership interest or exercises effective control.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 2 — GRANT OF LICENSE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2.1 LIMITED LICENSE. Subject to the terms and conditions of this Agreement,
+    Cipron s.r.o. grants Authorized Users a limited, non-exclusive,
+    non-transferable, non-sublicensable, revocable license to use the Software
+    solely for internal business purposes of Cipron s.r.o. and its Authorized
+    Subsidiaries.
+
+2.2 SCOPE OF USE. This license permits Authorized Users to:
+    (a) Install and execute the Software on systems owned or controlled by
+        Cipron s.r.o.;
+    (b) Make a reasonable number of backup copies solely for archival purposes;
+    (c) Modify the Software exclusively for internal use, provided that all
+        Derivative Works remain subject to this Agreement in full.
+
+2.3 RESERVATION OF RIGHTS. All rights not expressly granted in this Agreement
+    are reserved by Cipron s.r.o. No implied licenses are granted under this
+    Agreement.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 3 — RESTRICTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+3.1 NO REDISTRIBUTION. The Licensee shall not sell, rent, lease, lend,
+    sublicense, distribute, publish, or otherwise transfer the Software or
+    any portion thereof to any third party without the prior explicit written
+    consent of Cipron s.r.o.
+
+3.2 NO REVERSE ENGINEERING. The Licensee shall not decompile, disassemble,
+    reverse engineer, decrypt, or otherwise attempt to derive or reconstruct
+    the source code, underlying algorithms, or trade secrets of the Software,
+    except to the limited extent permitted by mandatory applicable law and only
+    after providing prior written notice to Cipron s.r.o.
+
+3.3 NO DERIVATIVE DISTRIBUTION. Derivative Works created by Authorized Users
+    may not be distributed, published, or transferred outside of Cipron s.r.o.
+    without explicit prior written approval.
+
+3.4 NO COMPETITIVE USE. The Software may not be used, in whole or in part,
+    to develop, train, benchmark, or support any product or service that
+    competes with Cipron s.r.o.'s offerings.
+
+3.5 NO REMOVAL OF NOTICES. The Licensee shall not remove, alter, obscure, or
+    destroy any proprietary notices, copyright notices, trademarks, or labels
+    affixed to or contained within the Software.
+
+3.6 ACCESS CONTROL. The Licensee shall implement reasonable technical and
+    organisational measures to ensure the Software is accessible only to
+    Authorized Users and is protected against unauthorised access, disclosure,
+    or use.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 4 — INTELLECTUAL PROPERTY & OWNERSHIP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+4.1 OWNERSHIP. The Software, including all copies and Derivative Works thereof,
+    is and shall remain the exclusive intellectual property of Cipron s.r.o.
+    This Agreement does not convey any ownership interest in the Software to
+    the Licensee.
+
+4.2 DERIVATIVE WORKS. Any Derivative Work created by an Authorized User shall
+    be automatically assigned to and become the exclusive property of
+    Cipron s.r.o. upon creation, without further act or consideration.
+
+4.3 FEEDBACK. Any feedback, suggestions, or improvements provided by the
+    Licensee regarding the Software shall be deemed the exclusive property of
+    Cipron s.r.o. and may be used without restriction, attribution, or
+    compensation.
+
+4.4 TRADEMARKS. Nothing in this Agreement grants the Licensee any right to
+    use the name, logo, trademarks, or trade names of Cipron s.r.o. without
+    prior written consent.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 5 — CONFIDENTIALITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+5.1 OBLIGATION. The Licensee agrees to hold all Confidential Information in
+    strict confidence and to take all reasonable precautions to prevent its
+    unauthorised disclosure, using at minimum the same degree of care used to
+    protect its own confidential information, but in no event less than
+    reasonable care.
+
+5.2 PERMITTED DISCLOSURE. Confidential Information may be disclosed only to
+    Authorized Users who have a need to know such information for the purposes
+    permitted under this Agreement and who are bound by confidentiality
+    obligations no less restrictive than those contained herein.
+
+5.3 EXCLUSIONS. Confidentiality obligations do not apply to information that:
+    (a) is or becomes publicly known through no fault of the Licensee;
+    (b) was rightfully in the Licensee's possession prior to disclosure;
+    (c) is independently developed without use of the Confidential Information;
+    (d) is required to be disclosed by applicable law or court order, provided
+        that the Licensee gives Cipron s.r.o. prompt prior written notice.
+
+5.4 SURVIVAL. Confidentiality obligations under this Section shall survive
+    termination or expiration of this Agreement for a period of five (5) years.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 6 — DISCLAIMER OF WARRANTIES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+6.1 THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT WARRANTY OF
+    ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, ACCURACY,
+    RELIABILITY, OR NON-INFRINGEMENT.
+
+6.2 CIPRON S.R.O. DOES NOT WARRANT THAT THE SOFTWARE WILL BE ERROR-FREE,
+    UNINTERRUPTED, SECURE, OR FREE FROM DEFECTS, VIRUSES, OR OTHER HARMFUL
+    COMPONENTS. THE LICENSEE ASSUMES ALL RISK ASSOCIATED WITH THE USE OF
+    THE SOFTWARE.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 7 — LIMITATION OF LIABILITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+7.1 TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL
+    CIPRON S.R.O. BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+    CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF
+    PROFITS, LOSS OF DATA, BUSINESS INTERRUPTION, OR LOSS OF GOODWILL, ARISING
+    OUT OF OR IN CONNECTION WITH THIS AGREEMENT OR THE USE OR INABILITY TO USE
+    THE SOFTWARE, EVEN IF CIPRON S.R.O. HAS BEEN ADVISED OF THE POSSIBILITY
+    OF SUCH DAMAGES.
+
+7.2 IN NO EVENT SHALL CIPRON S.R.O.'S TOTAL AGGREGATE LIABILITY UNDER THIS
+    AGREEMENT EXCEED THE AMOUNT PAID BY THE LICENSEE FOR THE SOFTWARE IN THE
+    TWELVE (12) MONTHS PRECEDING THE CLAIM, OR ONE HUNDRED EUROS (€100),
+    WHICHEVER IS GREATER.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 8 — TERM & TERMINATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+8.1 TERM. This Agreement is effective upon first access or use of the Software
+    and shall remain in force until terminated in accordance with this Section.
+
+8.2 TERMINATION FOR CAUSE. Cipron s.r.o. may terminate this Agreement
+    immediately and without notice upon any breach of its terms by the Licensee.
+
+8.3 TERMINATION FOR CONVENIENCE. Cipron s.r.o. reserves the right to terminate
+    this Agreement at any time upon thirty (30) days written notice to the
+    Licensee.
+
+8.4 EFFECT OF TERMINATION. Upon termination:
+    (a) All rights granted to the Licensee under this Agreement shall
+        immediately cease;
+    (b) The Licensee shall promptly destroy or return all copies of the
+        Software and Confidential Information in its possession;
+    (c) The Licensee shall certify in writing, upon request, that all copies
+        have been destroyed or returned.
+
+8.5 SURVIVAL. Sections 4, 5, 6, 7, 9, and 10 shall survive termination or
+    expiration of this Agreement.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 9 — GOVERNING LAW & DISPUTE RESOLUTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+9.1 GOVERNING LAW. This Agreement shall be governed by and construed in
+    accordance with the laws of the Slovak Republic, without regard to its
+    conflict of law principles.
+
+9.2 JURISDICTION. Any dispute arising out of or in connection with this
+    Agreement shall be subject to the exclusive jurisdiction of the competent
+    courts of the Slovak Republic.
+
+9.3 INJUNCTIVE RELIEF. The Licensee acknowledges that any breach of this
+    Agreement may cause irreparable harm to Cipron s.r.o. for which monetary
+    damages would be inadequate, and that Cipron s.r.o. shall be entitled to
+    seek equitable relief, including injunction and specific performance,
+    without the requirement of posting bond or other security.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 10 — GENERAL PROVISIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+10.1 ENTIRE AGREEMENT. This Agreement constitutes the entire agreement between
+     the parties with respect to the Software and supersedes all prior or
+     contemporaneous understandings, representations, or agreements, whether
+     written or oral.
+
+10.2 AMENDMENTS. Cipron s.r.o. reserves the right to amend this Agreement at
+     any time. Continued use of the Software following notice of amendments
+     constitutes acceptance of the revised terms.
+
+10.3 SEVERABILITY. If any provision of this Agreement is found to be invalid,
+     illegal, or unenforceable, the remaining provisions shall continue in full
+     force and effect.
+
+10.4 WAIVER. Failure by Cipron s.r.o. to enforce any provision of this
+     Agreement shall not constitute a waiver of its right to enforce such
+     provision in the future.
+
+10.5 ASSIGNMENT. The Licensee may not assign or transfer any rights or
+     obligations under this Agreement without the prior written consent of
+     Cipron s.r.o. Any attempted assignment in violation of this Section
+     shall be null and void.
+
+10.6 EXPORT COMPLIANCE. The Licensee agrees to comply with all applicable
+     export control laws and regulations and shall not export or re-export the
+     Software in violation of such laws.
+
+10.7 NOTICES. All legal notices under this Agreement shall be in writing and
+     delivered to the address below or such other address as may be notified
+     in writing.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CONTACT & LICENSING INQUIRIES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+For licensing inquiries, permissions, or legal matters, please contact:
+
+    Cipron s.r.o.
+    Legal Department
+    Email : legal@cipron.eu
+    Web   : https://cipron.eu
+
+Unauthorized use, reproduction, or distribution of this Software is strictly
+prohibited and may result in severe civil and criminal penalties under applicable
+Slovak, European Union, and international law.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Cipron s.r.o. — Proprietary Technology Solutions
+© 2026 Cipron s.r.o. All Rights Reserved.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
