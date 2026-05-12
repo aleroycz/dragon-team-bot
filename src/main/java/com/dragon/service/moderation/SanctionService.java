@@ -74,6 +74,15 @@ public class SanctionService {
     @Value("${discord.moderation-log.channel.id}")
     private String moderationLogChannelId;
 
+    /**
+     * Issues a warning to a member and applies the appropriate escalation tier.
+     *
+     * <ul>
+     *   <li>1st warn → DM notification only.</li>
+     *   <li>2nd warn → automatic temporary mute + DM + staff escalation alert.</li>
+     *   <li>3rd+ warn → DM + staff escalation alert, pending manual review before ban.</li>
+     * </ul>
+     */
     @Transactional
     public SanctionResponse warn(SanctionRequest request) {
         SanctionEntity sanction = persist(request);
@@ -252,6 +261,14 @@ public class SanctionService {
     // Timeout
     // ─────────────────────────────────────────────────────────────────────────
 
+    /**
+     * Applies a Discord-native timeout to a member (1 second – 28 days).
+     *
+     * Enforces the 28-day Discord ceiling so callers don't need to know the limit.
+     * The timeout is applied via JDA's {@code Member#timeoutFor} and a DM is sent.
+     *
+     * @throws IllegalArgumentException if duration is missing, non-positive, or exceeds 28 days.
+     */
     @Transactional
     public SanctionResponse timeout(SanctionRequest request) {
         if (request.durationSeconds() == null || request.durationSeconds() <= 0)
@@ -307,6 +324,13 @@ public class SanctionService {
         return sanctionMapper.toResponse(sanction);
     }
 
+    /**
+     * Records a mute sanction and notifies the member via DM.
+     *
+     * Role assignment is currently a TODO — the muted role ID needs to be wired
+     * in via {@code @Value}. The database record is created regardless so history
+     * is preserved even before the role mechanism is implemented.
+     */
     @Transactional
     public SanctionResponse mute(SanctionRequest request) {
         SanctionEntity sanction = persist(request);
@@ -358,6 +382,15 @@ public class SanctionService {
         return sanctionMapper.toResponse(sanction);
     }
 
+    /**
+     * Bans a member from the guild, optionally for a limited duration.
+     *
+     * The DM is sent before the ban so the member actually receives it —
+     * Discord cannot deliver DMs to banned users. The ban REST call is
+     * chained inside the DM callback to preserve this ordering.
+     * If the member is already gone (retrieved as {@code null}), the ban is
+     * applied directly without a DM attempt.
+     */
     @Transactional
     public SanctionResponse ban(SanctionRequest request) {
         SanctionEntity sanction = persist(request);
@@ -426,6 +459,14 @@ public class SanctionService {
         return sanctionMapper.toResponse(sanction);
     }
 
+    /**
+     * Revokes a single active sanction by its database ID.
+     *
+     * If the sanction is a WARN, the member's active-warn counter in the summary
+     * table is decremented so the escalation thresholds stay accurate.
+     *
+     * @throws IllegalArgumentException if no sanction with the given ID exists.
+     */
     @Transactional
     public void revoke(Long sanctionId, String revokedByTag) {
         SanctionEntity sanction = sanctionRepository.findById(sanctionId)
@@ -445,6 +486,43 @@ public class SanctionService {
         }
 
         log.info("[Sanctions] Sanction {} revoked by {}", sanctionId, revokedByTag);
+    }
+
+    /**
+     * Revokes all active warnings for a member in one operation.
+     *
+     * Intended for staff to manually clear a member's warn slate after a probation
+     * period or a dispute resolution — it is the bulk equivalent of calling
+     * {@link #revoke} once per warn. The summary entity is updated atomically so
+     * the escalation counters remain consistent.
+     *
+     * @param userId      Discord snowflake of the member.
+     * @param guildId     Guild in which warns should be cleared.
+     * @param clearedByTag The moderator tag (and optional reason) to store on each revoked warn.
+     * @return The number of warnings that were cleared.
+     */
+    @Transactional
+    public int clearWarns(String userId, String guildId, String clearedByTag) {
+        List<SanctionEntity> activeWarns = sanctionRepository.findByTargetUserIdAndGuildIdAndTypeAndStatus(
+                userId, guildId, SanctionType.WARN, SanctionStatus.ACTIVE);
+
+        if (activeWarns.isEmpty()) return 0;
+
+        Instant now = Instant.now();
+        for (SanctionEntity warn : activeWarns) {
+            warn.setStatus(SanctionStatus.REVOKED);
+            warn.setRevokedAt(now);
+            warn.setRevokedBy(clearedByTag);
+            sanctionRepository.save(warn);
+        }
+
+        summaryRepository.findByUserIdAndGuildId(userId, guildId).ifPresent(summary -> {
+            summary.setActiveWarns(0);
+            summaryRepository.save(summary);
+        });
+
+        log.info("[Sanctions] {} active warn(s) cleared for user {} by {}", activeWarns.size(), userId, clearedByTag);
+        return activeWarns.size();
     }
 
     public List<SanctionResponse> getHistory(String userId, String guildId) {
